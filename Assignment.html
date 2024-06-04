@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Query Interface</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #response {
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        button {
+            margin-right: 10px;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        h1, h2 {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Query AI Models</h1>
+
+    <!-- User Query Input Section -->
+    <label for="prompt">Enter your query:</label>
+    <textarea id="prompt" rows="4" cols="50"></textarea><br><br>
+    
+    <!-- Buttons to Query Different Models -->
+    <button onclick="sendQuery('query_llama2')">Query Llama-2</button>
+    <button onclick="sendQuery('query_gpt3')">Query GPT-3.5</button>
+    <button onclick="sendQuery('query_gpt4')">Query GPT-4</button>
+    
+    <!-- Buttons to Start Scraping and Embedding -->
+    <button onclick="startScrape()">Start Scraping</button>
+    <button onclick="startEmbed()">Start Embedding</button>
+    
+    <h2>Response:</h2>
+    <div id="response"></div>
+
+    <script>
+        // Function to send query to AI models
+        function sendQuery(endpoint) {
+            const prompt = document.getElementById('prompt').value;
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = 'Waiting for response...';
+
+            fetch(`/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                responseDiv.textContent = ''; // Clear previous content
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                function read() {
+                    reader.read().then(({ done, value }) => {
+                        if (done) {
+                            return;
+                        }
+                        responseDiv.textContent += decoder.decode(value, { stream: true }) + ' ';
+                        read();
+                    }).catch(error => {
+                        console.error('Error while reading response:', error);
+                    });
+                }
+
+                read();
+            }).catch(error => {
+                console.error('Fetch error:', error);
+                responseDiv.textContent = 'Error fetching response: ' + error.message;
+            });
+        }
+
+        // Function to start scraping process
+        function startScrape() {
+            fetch('/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: 'https://u.ae/en/information-and-services#/' }) 
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message || data.error);
+            }).catch(error => {
+                console.error('Fetch error:', error);
+            });
+        }
+
+        // Function to start embedding process
+        function startEmbed() {
+            fetch('/embed', {
+                method: 'POST'
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message || data.error);
+            }).catch(error => {
+                console.error('Fetch error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

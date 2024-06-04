@@ -1,6 +1,6 @@
 Overview
 
-This project is an AI Query Interface designed to interact with various language models (LLMs) to provide users with responses based on their queries. The primary functionality involves scraping text from websites, embedding the text into a vector database, and querying the database to find relevant information to respond to user queries. The responses are generated using different AI models, including GPT-3.5-Turbo, GPT-4, and LLaMA-2.
+This project is an AI Query Interface designed to interact with various language models (LLMs) to provide users with responses based on their queries. The primary functionality involves scraping text from websites, embedding the text into a vector database, and querying the database to find relevant information to respond to user queries. The responses are generated using different AI models, including GPT-3.5-Turbo, GPT-4, and llama-2-70b-chat.
 
 Features:
   - Web Scraping: The application can scrape text data from specified websites.

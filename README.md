@@ -1,8 +1,8 @@
 Overview
 
 This project is an AI Query Interface designed to interact with various language models (LLMs) to provide users with responses based on their queries. The primary functionality involves scraping text from websites, embedding the text into a vector database, and querying the database to find relevant information to respond to user queries. The responses are generated using different AI models, including GPT-3.5-Turbo, GPT-4, and LLaMA-2.
-Features
 
+Features:
   - Web Scraping: The application can scrape text data from specified websites.
   - Text Embedding: Scraped text is embedded into a vector database using Pinecone.
   - Query Processing: User queries are processed to retrieve relevant information from the vector database.
